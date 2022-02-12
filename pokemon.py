@@ -11,6 +11,46 @@
 
 import requests
 
+
+class Pokemon:
+
+  def __init__(self, name : str) -> None:
+    url_pokemon = "https://pokeapi.co/api/v2/pokemon/" + name
+    self.pokemon = requests.get(url_pokemon).json()
+    url_species = "https://pokeapi.co/api/v2/pokemon-species/" + name
+    self.species = requests.get(url_species).json()
+
+  def name(self) -> str:
+    return self.pokemon["name"] if "name" in self.pokemon else "???"
+
+  def height(self) -> str:
+    return str(self.pokemon["height"]) if "height" in self.pokemon else "???"
+
+  def is_legendary(self) -> str:
+    return str(self.species["is_legendary"]) if "is_legendary" in self.species else "???"
+
+  def habitat(self) -> str:
+    try:
+      return self.species["habitat"]["name"]
+    except:
+      return "???"
+
+  def types(self) -> str:
+    try:
+      return str([t["type"]["name"] for t in self.pokemon["types"]])
+    except:
+      return "???"
+
+  def desc(self) -> str:
+    try:
+      i = 0
+      while self.species["flavor_text_entries"][i]["language"]["name"] != "en":
+        i += 1
+      return self.species["flavor_text_entries"][i]["flavor_text"].replace("\n", " ").replace("\f", " ")
+    except:
+      return "???"
+
+
 def main() -> None:
   
   print(
@@ -29,43 +69,22 @@ def main() -> None:
       continue
 
     try:
-      url_pokemon = "https://pokeapi.co/api/v2/pokemon/" + user_input
-      pokemon = requests.get(url_pokemon).json()
-      url_species = "https://pokeapi.co/api/v2/pokemon-species/" + user_input
-      species = requests.get(url_species).json()
+      pokemon = Pokemon(user_input)
     except:
       print("\nFailed to retrieve Pokemon data! Maybe try again?\n")
       continue
-
-    # Check if the required data are available. Missing data will have 
-    # "???" displayed instead.
-    name = pokemon["name"] if "name" in pokemon else "???"
-    height = pokemon["height"] if "height" in pokemon else "???"
-    legend = species["is_legendary"] if "is_legendary" in species else "???"
-    try:
-      habitat = species["habitat"]["name"]
-    except:
-      habitat = "???"
-    try:
-      types = [t["type"]["name"] for t in pokemon["types"]]
-    except:
-      types = "???"
-    try:
-      desc = species["flavor_text_entries"][0]["flavor_text"]
-      desc = desc.replace("\n", " ").replace("\f", " ")
-    except:
-      desc = "???"
     
     print(
-      "\nname:", name,
-      "\ndescription:", desc,
-      "\nheight:", height,
-      "\ntypes:", types,
-      "\nhabitat:", habitat,
-      "\nis_legendary:", legend, "\n"
+      "\nname:", pokemon.name(),
+      "\ndescription:", pokemon.desc(),
+      "\nheight:", pokemon.height(),
+      "\ntypes:", pokemon.types(),
+      "\nhabitat:", pokemon.habitat(),
+      "\nis_legendary:", pokemon.is_legendary(), "\n"
     )
 
   return None
+
 
 if __name__ == '__main__':
   main()
