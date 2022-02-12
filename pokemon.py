@@ -21,7 +21,7 @@ def get_pokemon(name : str) -> dict:
 
   # Raise an exception if fetching data failed.
   if pokemon_req.status_code != 200:
-    raise Exception("Something went wrong with the request!")
+    raise Exception("Request failed with status code: " + str(pokemon_req.status_code))
 
   # Retrieve available data from this request.
   pokemon = pokemon_req.json()
@@ -74,8 +74,9 @@ def main() -> None:
 
     try:
       pokemon_info = get_pokemon(user_input)
-    except:
-      print("\nFailed to retrieve Pokemon data! Maybe try again?\n")
+    except Exception as e:
+      print("\nFailed to retrieve Pokemon data! Maybe try again?")
+      print("Error:", e, "\n")
       continue
     
     print(
