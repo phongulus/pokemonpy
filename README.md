@@ -15,7 +15,7 @@ Simply run `pokemon.py` to launch the command line app and enter a Pokemon name.
 
 If nothing is found at `https://pokeapi.co/api/v2/pokemon/name`, Pokemonpy will instead check to see if that `name` is present under `https://pokeapi.co/api/v2/pokemon-species` and return information that can obtained there. A `varieties` list will also be displayed with the names of the Pokemons under this species group. Enter one of the name of one of these Pokemons to see its `"name"`, `"height"`, and `"types"` attributes.
 
-Alternatively, if you want to do other things with the `get_pokemon` function, just copy `pokemon.py` into your project and add:
+Alternatively, if you want to do other things with the `get_pokemon` and `get_species` functions, just copy `pokemon.py` into your project and add:
 ```
 from pokemon import get_pokemon, get_species
 ```
